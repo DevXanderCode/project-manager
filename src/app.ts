@@ -1,3 +1,22 @@
+// AutoBind Function
+function autoBind(
+  target: any,
+  methodName: string,
+  descriptor: PropertyDescriptor
+) {
+  console.log("Logging Descriptor", descriptor);
+  const originalMethod = descriptor?.value;
+  const adjDescription: PropertyDescriptor = {
+    configurable: true,
+    get() {
+      const boundFn = originalMethod.bind(this);
+      return boundFn;
+    },
+  };
+  return adjDescription;
+}
+
+// Project input class
 class ProjectInput {
   templateElement: HTMLTemplateElement;
   hostElement: HTMLDivElement;
@@ -33,13 +52,14 @@ class ProjectInput {
     this.attach();
   }
 
+  @autoBind
   private submitHandler(event: Event) {
     event.preventDefault();
     console.log("Logging title", this.titleInputElement.value);
   }
 
   private configure() {
-    this.element.addEventListener("submit", this.submitHandler.bind(this));
+    this.element.addEventListener("submit", this.submitHandler);
   }
 
   private attach() {
