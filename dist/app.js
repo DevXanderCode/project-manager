@@ -13,8 +13,22 @@ function validate(validatebleInput) {
     if (validatebleInput.minLength != null &&
         typeof validatebleInput.value === "string") {
         isValid =
-            isValid && validatebleInput.value.length > validatebleInput.minLength;
+            isValid && validatebleInput.value.length >= validatebleInput.minLength;
     }
+    if (validatebleInput.maxLength != null &&
+        typeof validatebleInput.value === "string") {
+        isValid =
+            isValid && validatebleInput.value.length <= validatebleInput.maxLength;
+    }
+    if (validatebleInput.min != null &&
+        typeof validatebleInput.value === "number") {
+        isValid = isValid && validatebleInput.value >= validatebleInput.min;
+    }
+    if (validatebleInput.max != null &&
+        typeof validatebleInput.value === "number") {
+        isValid = isValid && validatebleInput.value <= validatebleInput.max;
+    }
+    return isValid;
 }
 // AutoBind Function
 function autoBind(target, methodName, descriptor) {
@@ -47,9 +61,24 @@ class ProjectInput {
         const enteredTitle = this.titleInputElement.value;
         const enteredDescription = this.descriptionInputElement.value;
         const enteredPeople = this.peopleInputElement.value;
-        if (enteredTitle.trim().length === 0 ||
-            enteredDescription.trim().length === 0 ||
-            enteredPeople.trim().length === 0) {
+        const titleValidatable = {
+            value: enteredTitle,
+            required: true,
+        };
+        const descriptionValidatable = {
+            value: enteredDescription,
+            required: true,
+            minLength: 5,
+        };
+        const peopleValidatable = {
+            value: +enteredPeople,
+            required: true,
+            min: 1,
+            max: 5,
+        };
+        if (!validate(titleValidatable) ||
+            !validate(descriptionValidatable) ||
+            !validate(peopleValidatable)) {
             alert("Invalid Input, try again!!!");
             return;
         }
