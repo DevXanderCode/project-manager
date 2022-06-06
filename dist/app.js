@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 // Project State Management
 class ProjectState {
     constructor() {
+        this.listeners = [];
         this.projects = [];
     }
     static getInstance() {
@@ -19,14 +20,20 @@ class ProjectState {
             return this.instance;
         }
     }
-    addProject(title, description, numOfPeople) {
+    addListeners(listenerFn) {
+        this.listeners.push(listenerFn);
+    }
+    addProject(title, description, people) {
         const newProject = {
             id: Math.random.toString(),
             title,
             description,
-            people: numOfPeople,
+            people,
         };
         this.projects.push(newProject);
+        for (const listenerFn of this.listeners) {
+            listenerFn(this.projects.slice());
+        }
     }
 }
 const projectState = ProjectState.getInstance();
@@ -142,7 +149,8 @@ class ProjectInput {
         const userInput = this.gatherUserInput();
         if (Array.isArray(userInput)) {
             const [title, desc, people] = userInput;
-            console.log("Logging user input", title, desc, people);
+            // console.log("Logging user input", title, desc, people);
+            projectState.addProject(title, desc, people);
             this.clearInputs();
         }
     }
