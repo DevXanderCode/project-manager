@@ -79,13 +79,26 @@ function autoBind(target, methodName, descriptor) {
 class ProjectList {
     constructor(type) {
         this.type = type;
+        this.assignedProjects = [];
         this.templateElement = document.getElementById("project-list");
         this.hostElement = document.getElementById("app");
         const importedNode = document.importNode(this.templateElement.content, true);
         this.element = importedNode.firstElementChild;
         this.element.id = `${this.type}-projects`;
+        projectState.addListeners((projects) => {
+            this.assignedProjects = projects;
+            this.renderProjects();
+        });
         this.attach();
         this.renderContent();
+    }
+    renderProjects() {
+        const listEl = document.getElementById(`${this.type}-project-list`);
+        for (const prjItem of this.assignedProjects) {
+            const listItem = document.createElement("li");
+            listItem.textContent = prjItem.title;
+            listEl.appendChild(listItem);
+        }
     }
     renderContent() {
         const listId = `${this.type}-project-list`;
