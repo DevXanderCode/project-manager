@@ -1,3 +1,27 @@
+// Validation
+interface Validatable {
+  value: string;
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  min?: number;
+  max?: number;
+}
+
+function validate(validatebleInput: Validatable) {
+  let isValid = true;
+  if (validatebleInput.required) {
+    isValid = isValid && validatebleInput.value.toString().length !== 0;
+  }
+  if (
+    validatebleInput.minLength != null &&
+    typeof validatebleInput.value === "string"
+  ) {
+    isValid =
+      isValid && validatebleInput.value.length > validatebleInput.minLength;
+  }
+}
+
 // AutoBind Function
 function autoBind(
   target: any,
