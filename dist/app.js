@@ -78,7 +78,6 @@ function validate(validatebleInput) {
 }
 // AutoBind Function
 function autoBind(target, methodName, descriptor) {
-    console.log("Logging Descriptor", descriptor);
     const originalMethod = descriptor === null || descriptor === void 0 ? void 0 : descriptor.value;
     const adjDescription = {
         configurable: true,
@@ -119,13 +118,28 @@ class ProjectItem extends Component {
         }
         return `${this.project.people} persons`;
     }
-    configure() { }
+    dragStartHandler(event) {
+        console.log("Drag Event", event);
+    }
+    dragEndHandler(event) {
+        console.log("Drag End");
+    }
+    configure() {
+        this.element.addEventListener("dragstart", this.dragStartHandler);
+        this.element.addEventListener("dragend", this.dragEndHandler);
+    }
     renderContent() {
         this.element.querySelector("h2").textContent = this.project.title;
         this.element.querySelector("h3").textContent = this.persons + " assigned";
         this.element.querySelector("p").textContent = this.project.description;
     }
 }
+__decorate([
+    autoBind
+], ProjectItem.prototype, "dragStartHandler", null);
+__decorate([
+    autoBind
+], ProjectItem.prototype, "dragEndHandler", null);
 // Project List Class
 class ProjectList extends Component {
     constructor(type) {
