@@ -105,6 +105,22 @@ class Component {
         this.hostElement.insertAdjacentElement(insertAtBeginning ? "afterbegin" : "beforeend", this.element);
     }
 }
+// ProjectItem Class
+class ProjectItem extends Component {
+    constructor(hostId, project) {
+        super("single-project", hostId, false, project.id);
+        this.project = project;
+        this.configure();
+        this.renderContent();
+    }
+    configure() { }
+    renderContent() {
+        this.element.querySelector("h2").textContent = this.project.title;
+        this.element.querySelector("h3").textContent =
+            this.project.people.toString();
+        this.element.querySelector("p").textContent = this.project.description;
+    }
+}
 // Project List Class
 class ProjectList extends Component {
     constructor(type) {
@@ -135,9 +151,10 @@ class ProjectList extends Component {
         const listEl = document.getElementById(`${this.type}-project-list`);
         listEl.innerHTML = "";
         for (const prjItem of this.assignedProjects) {
-            const listItem = document.createElement("li");
-            listItem.textContent = prjItem.title;
-            listEl.appendChild(listItem);
+            new ProjectItem(this.element.querySelector("ul").id, prjItem);
+            // const listItem = document.createElement("li");
+            // listItem.textContent = prjItem.title;
+            // listEl.appendChild(listItem);
         }
     }
 }
